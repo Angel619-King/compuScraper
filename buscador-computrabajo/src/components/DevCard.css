@@ -1,0 +1,70 @@
+.dev-card {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  width: 210px; /* Un poco más angosta */
+  margin: 5px;  /* Menos margen */
+  background-color: #f7f7f7;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+
+.dev-card:hover {
+  transform: translateY(-4px);
+}
+
+.dev-card img.dev-foto {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.dev-card h3 {
+  margin: 5px 0;
+}
+
+.dev-card p {
+  margin: 5px 0 10px 0;
+  font-style: italic;
+  color: #555;
+}
+
+.dev-links {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dev-links a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: white;
+}
+
+.dev-links a.github {
+  background-color: #333;
+}
+
+.dev-links a.linkedin {
+  background-color: #0077b5;
+}
+
+.dev-links a.facebook {
+  background-color: #1877f2;
+}
+
+.dev-links a:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}

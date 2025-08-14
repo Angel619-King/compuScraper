@@ -3,10 +3,12 @@ import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
-
+import fotoVictor from "./components/foto-victor.jpg";
+import fotoLuis from "./components/foto-luis1.jpg";
 import Buscador from './components/Buscador';
 import { geocodeLocationManual } from './components/manualGeode';
 import BotonesExportar from './components/BotonesExportar';
+import DevCard from './components/DevCard';
 
 import 'leaflet/dist/images/marker-icon.png';
 import 'leaflet/dist/images/marker-shadow.png';
@@ -70,7 +72,7 @@ const LeafletMap = ({ ofertas, centro, zoom, height }) => {
     if (mapRef.current && !mapInstanceRef.current) {
       mapInstanceRef.current = L.map(mapRef.current).setView(centro, zoom);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
       }).addTo(mapInstanceRef.current);
     }
 
@@ -185,7 +187,7 @@ function App() {
 
   const handleCerrarMapa = () => {
     setMostrarMapaTop10(false);
-    setFiltro('todos'); // 🔹 Vuelve a mostrar todas las ofertas
+    setFiltro('todos');
   };
 
   const resultadosRender = ofertasFiltradas();
@@ -250,8 +252,30 @@ function App() {
             />
           </div>
         )}
+
+
       </div>
+              {/* === SECCIÓN EQUIPO === */}
+        <h2 style={{ textAlign: "center", marginTop: "30px" }}>Nuestro Equipo</h2>
+        <div className="dev-grid">
+          <DevCard
+            nombre="Victor Angel Cabrera del Angel"
+            puesto="Desarrollador Front End"
+            foto={fotoVictor}
+            github="https://github.com/Angel619-King?tab=repositories"
+            linkedin="https://www.linkedin.com/in/victor-angel-cabrera-del-angel-b05855304"
+          />
+          <DevCard
+            nombre="Luis Mario Reyes Angeles"
+            puesto="Desarrollador Back End"
+            foto={fotoLuis}
+            github="https://github.com/usuario"
+            facebook="https://www.facebook.com/share/19s9iBZsFr/"
+          />
+
+        </div>
     </div>
+    
   );
 }
 
