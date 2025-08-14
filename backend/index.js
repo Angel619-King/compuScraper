@@ -1,30 +1,19 @@
 const puppeteer = require('puppeteer');
-const fs = require('fs');
-const { Parser } = require('json2csv');
 
 const BASE_URL = 'https://mx.computrabajo.com';
 
 /**
- 
  * @param {string} puesto
  * @returns {Promise<Array>}
  */
 async function scrapeJobs(puesto) {
     const busqueda = puesto.trim().toLowerCase().replace(/\s+/g, '-');
-    const nombreArchivo = `ofertas_${busqueda.replace(/-/g, '_')}_${new Date().toISOString().split('T')[0]}`;
-    const CARPETA_SALIDA = `./resultados_${busqueda}`;
-
-    if (!fs.existsSync(CARPETA_SALIDA)) {
-        fs.mkdirSync(CARPETA_SALIDA);
-    }
-
     const urlBusqueda = `${BASE_URL}/trabajo-de-${busqueda}`;
     console.log(`\nIniciando búsqueda en: ${urlBusqueda}`);
 
-    const resultados = await extraerOfertasCompletas(urlBusqueda, CARPETA_SALIDA, nombreArchivo);
+    const resultados = await extraerOfertasCompletas(urlBusqueda);
     return resultados; 
 }
-
 
 async function extraerDetalleOferta(browser, idOferta, urlBase, paginaActual) {
     const pagina = await browser.newPage();
@@ -116,7 +105,7 @@ async function extraerDetalleOferta(browser, idOferta, urlBase, paginaActual) {
     }
 }
 
-async function extraerOfertasCompletas(urlBusqueda, carpetaSalida, nombreArchivo) {
+async function extraerOfertasCompletas(urlBusqueda) {
     const navegador = await puppeteer.launch({ 
         headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -204,33 +193,10 @@ async function extraerOfertasCompletas(urlBusqueda, carpetaSalida, nombreArchivo
     }
 
     console.log(`\nTotal de ofertas encontradas: ${resultados.length}`);
-
-    if (resultados.length > 0) {
-        
-        const jsonPath = `${carpetaSalida}/${nombreArchivo}.json`;
-        fs.writeFileSync(jsonPath, JSON.stringify(resultados, null, 2));
-        console.log(`✅ Datos JSON guardados en: ${jsonPath}`);
-
-        
-        const camposCSV = [
-            'titulo', 'empresa', 'ubicacion', 'publicado', 'enlace', 'pagina',
-            'contrato', 'requisitos', 'descripcion', 'salario'
-        ];
-        
-        const parser = new Parser({ fields: camposCSV });
-        const csv = parser.parse(resultados);
-        const csvPath = `${carpetaSalida}/${nombreArchivo}.csv`;
-        fs.writeFileSync(csvPath, csv);
-        console.log(`✅ Datos CSV guardados en: ${csvPath}`);
-    } else {
-        console.log('No se encontraron ofertas para guardar.');
-    }
-
     await navegador.close();
     console.log('Navegador cerrado.');
 
     return resultados; 
 }
-
 
 module.exports = { scrapeJobs };
