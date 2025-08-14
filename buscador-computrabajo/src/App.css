@@ -1,0 +1,135 @@
+/* Base */
+* { box-sizing: border-box; }
+body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-system, Arial, sans-serif; }
+
+.App { min-height: 100vh; }
+
+/* Header con degradado morado de izquierda a derecha */
+.header-gradient {
+  background: linear-gradient(to right, #b388ff, #7c4dff, #512da8);
+  padding: 32px 16px;
+  color: #fff;
+}
+.header-inner { max-width: 1100px; margin: 0 auto; }
+.app-title { margin: 0 0 16px; font-size: 28px; font-weight: 800; }
+
+/* Panel principal */
+.panel {
+  max-width: 1100px;
+  margin: 24px auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* Filtros */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.filtro-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-weight: 600;
+}
+.filtro-btn:hover { background: #e5e7eb; }
+.filtro-btn.active {
+  background: #6a1b9a;
+  color: #fff;
+  border-color: #6a1b9a;
+}
+
+/* Toolbar: mapa + exportaciones */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 18px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #6a1b9a, #512da8);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform .15s ease, opacity .2s;
+}
+.btn-primary:hover { transform: translateY(-1px); opacity: .95; }
+
+.export-bar {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.btn-export {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  transition: transform .15s ease, opacity .2s;
+}
+.btn-export:hover { transform: translateY(-1px); opacity: .95; }
+.btn-export.csv { background: linear-gradient(135deg, #00c853, #009845); }
+.btn-export.json { background: linear-gradient(135deg, #ff9800, #ef6c00); }
+.btn-export.pdf { background: linear-gradient(135deg, #ef5350, #d32f2f); }
+
+/* Grid de ofertas */
+.ofertas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.oferta-card {
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.oferta-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(17, 24, 39, 0.08);
+}
+.oferta-titulo { color: #5e35b1; margin: 0 0 6px; font-size: 18px; }
+.salario { color: #2e7d32; font-weight: 700; margin-top: 6px; }
+.acciones { display: flex; gap: 8px; margin-top: 12px; }
+
+/* Mapa */
+.mapa-container {
+  margin-top: 24px;
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+}
+.map-title { margin-top: 0; }
+
+.btn-danger {
+  background: linear-gradient(135deg, #e53935, #c62828);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.btn-danger:hover { opacity: .95; }
+
+.info { color: #4b5563; text-align: center; margin: 12px 0; }
+.error { color: #e11d48; text-align: center; margin: 12px 0; }
+
+.leaflet-container { border-radius: 12px; }

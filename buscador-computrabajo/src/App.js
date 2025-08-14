@@ -1,0 +1,213 @@
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import './App.css';
+
+import Buscador from './components/Buscador';
+import { geocodeLocationManual } from './components/manualGeode';
+import BotonesExportar from './components/BotonesExportar';
+
+import 'leaflet/dist/images/marker-icon.png';
+import 'leaflet/dist/images/marker-shadow.png';
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
+});
+
+const Filtros = ({ filtro, setFiltro }) => (
+  <div className="filtros">
+    <button onClick={() => setFiltro('todos')} className={`filtro-btn ${filtro === 'todos' ? 'active' : ''}`}>
+      Todas las ofertas
+    </button>
+    <button onClick={() => setFiltro('mejores')} className={`filtro-btn ${filtro === 'mejores' ? 'active' : ''}`}>
+      Mejores pagados
+    </button>
+    <button onClick={() => setFiltro('peores')} className={`filtro-btn ${filtro === 'peores' ? 'active' : ''}`}>
+      Peores pagados
+    </button>
+  </div>
+);
+
+const LeafletMap = ({ ofertas, centro, zoom, height }) => {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+
+  useEffect(() => {
+    if (mapRef.current && !mapInstanceRef.current) {
+      mapInstanceRef.current = L.map(mapRef.current).setView(centro, zoom);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mapInstanceRef.current);
+    }
+
+    const map = mapInstanceRef.current;
+    if (map) {
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+
+      ofertas.forEach(oferta => {
+        L.marker([oferta.coordenadas.lat, oferta.coordenadas.lng])
+          .addTo(map)
+          .bindPopup(
+            `<h3>${oferta.titulo}</h3>` +
+            `<p><strong>Salario:</strong> ${oferta.salario}</p>` +
+            `<p><strong>Ubicación:</strong> ${oferta.ubicacion}</p>`
+          );
+      });
+
+      map.setView(centro, zoom);
+    }
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [ofertas, centro, zoom]);
+
+  return <div ref={mapRef} style={{ height, width: '100%', borderRadius: '12px' }} />;
+};
+
+function App() {
+  const [ofertas, setOfertas] = useState([]);
+  const [busqueda, setBusqueda] = useState('');
+  const [filtro, setFiltro] = useState('todos');
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
+  const [mostrarMapaTop10, setMostrarMapaTop10] = useState(false);
+
+  const fetchOfertas = async () => {
+    if (!busqueda.trim()) {
+      setError('Por favor, ingresa un puesto de trabajo para buscar.');
+      return;
+    }
+
+    setCargando(true);
+    setError(null);
+    setOfertas([]);
+    setMostrarMapaTop10(false);
+
+    try {
+      const response = await axios.post('http://localhost:3001/api/buscar', { puesto: busqueda });
+      const ofertasBase = response.data;
+
+      const ofertasConCoords = ofertasBase.map((oferta) => {
+        const coordenadas = geocodeLocationManual(oferta.ubicacion);
+        return {
+          ...oferta,
+          coordenadas: coordenadas || { lat: 19.4326, lng: -99.1332 },
+        };
+      }).filter(oferta => oferta !== null);
+
+      setOfertas(ofertasConCoords);
+    } catch (err) {
+      setError("No se pudieron cargar las ofertas. Asegúrate de que el servidor esté corriendo.");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const ofertasFiltradas = () => {
+    let resultados = [...ofertas];
+
+    switch (filtro) {
+      case 'mejores':
+        resultados = resultados
+          .filter(item => !isNaN(parseFloat(String(item.salario).replace(/[^0-9.]/g, ''))))
+          .sort((a, b) => parseFloat(String(b.salario).replace(/[^0-9.]/g, '')) -
+                          parseFloat(String(a.salario).replace(/[^0-9.]/g, '')))
+          .slice(0, 10);
+        break;
+      case 'peores':
+        resultados = resultados
+          .filter(item => !isNaN(parseFloat(String(item.salario).replace(/[^0-9.]/g, ''))))
+          .sort((a, b) => parseFloat(String(a.salario).replace(/[^0-9.]/g, '')) -
+                          parseFloat(String(b.salario).replace(/[^0-9.]/g, '')))
+          .slice(0, 10);
+        break;
+      default:
+        break;
+    }
+    return resultados;
+  };
+
+  const handleSearchClick = () => fetchOfertas();
+  const handleVerMapaTop10 = () => {
+    setFiltro('mejores');
+    setMostrarMapaTop10(true);
+  };
+
+  const resultadosRender = ofertasFiltradas();
+
+  return (
+    <div className="App">
+      <div className="header-gradient">
+        <div className="header-inner">
+          <h1 className="app-title">Sistema de Búsqueda de Empleos</h1>
+          <Buscador
+            busqueda={busqueda}
+            setBusqueda={setBusqueda}
+            onSearch={handleSearchClick}
+            isLoading={cargando}
+          />
+        </div>
+      </div>
+
+      <div className="panel">
+        <Filtros filtro={filtro} setFiltro={setFiltro} />
+
+        <div className="toolbar">
+          <button onClick={handleVerMapaTop10} className="btn-primary">
+            Ver mapa de los 10 mejores
+          </button>
+
+          {ofertas.length > 0 && (
+            <BotonesExportar datos={ofertas} />
+          )}
+        </div>
+
+        {cargando && <p className="info">🔍 Buscando ofertas de empleo...</p>}
+        {error && <p className="error">{error}</p>}
+        {!cargando && resultadosRender.length === 0 && !error && (
+          <p className="info">No se encontraron ofertas. Intenta una nueva búsqueda.</p>
+        )}
+
+        {!cargando && resultadosRender.length > 0 && (
+          <div className="ofertas-grid">
+            {resultadosRender.map((oferta, index) => (
+              <div key={index} className="oferta-card">
+                <h3 className="oferta-titulo">{oferta.titulo}</h3>
+                <p><strong>Empresa:</strong> {oferta.empresa}</p>
+                <p><strong>Ubicación:</strong> {oferta.ubicacion}</p>
+                <p className="salario"><strong>Salario:</strong> {oferta.salario}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {mostrarMapaTop10 && (
+          <div className="mapa-container">
+            <button className="btn-danger" onClick={() => setMostrarMapaTop10(false)}>Cerrar Mapa</button>
+            <h2 className="map-title">Ubicación de las 10 ofertas mejor pagadas</h2>
+            <LeafletMap
+              ofertas={resultadosRender}
+              centro={[19.4326, -99.1332]}
+              zoom={6}
+              height="500px"
+              key={`map-top10`}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
