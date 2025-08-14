@@ -57,6 +57,7 @@ const LeafletMap = ({ ofertas, centro, zoom, height }) => {
           .bindPopup(
             `<h3>${oferta.titulo}</h3>` +
             `<p><strong>Salario:</strong> ${oferta.salario}</p>` +
+            `<p><strong>Ubicación:</strong> ${oferta.ubicacion}</p>` + 
             `<p><strong>Ubicación:</strong> ${oferta.ubicacion}</p>`
           );
       });
@@ -185,8 +186,10 @@ function App() {
               <div key={index} className="oferta-card">
                 <h3 className="oferta-titulo">{oferta.titulo}</h3>
                 <p><strong>Empresa:</strong> {oferta.empresa}</p>
+                
                 <p><strong>Ubicación:</strong> {oferta.ubicacion}</p>
                 <p className="salario"><strong>Salario:</strong> {oferta.salario}</p>
+                <p><strong>Descripcion:</strong> {oferta.descripcion}</p>
               </div>
             ))}
           </div>

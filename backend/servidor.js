@@ -23,8 +23,7 @@ app.post('/api/buscar', async (req, res) => {
         console.log(`Petición recibida para buscar: ${puesto}`);
         const ofertas = await scrapeJobs(puesto); 
 
-        // Aquí puedes procesar los datos antes de enviarlos, por ejemplo,
-        // para estandarizar el salario si lo necesitas.
+
         
         res.json(ofertas); 
     } catch (error) {
