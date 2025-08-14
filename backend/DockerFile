@@ -1,0 +1,17 @@
+# Imagen base con Node y Puppeteer compatible
+FROM zenika/alpine-chrome:with-node
+
+# Crear directorio app
+WORKDIR /app
+
+# Copiar archivos al contenedor
+COPY . .
+
+# Instalar dependencias
+RUN npm install
+
+# Exponer el puerto
+EXPOSE 3000
+
+# Comando para iniciar la app
+CMD ["node", "index.js"]
