@@ -10,7 +10,9 @@ import { geocodeLocationManual } from './components/manualGeode';
 import BotonesExportar from './components/BotonesExportar';
 import DevCard from './components/DevCard';
 
-// Configuración de iconos para Leaflet
+import 'leaflet/dist/images/marker-icon.png';
+import 'leaflet/dist/images/marker-shadow.png';
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -126,11 +128,8 @@ function App() {
     setMostrarMapaTop10(false);
 
     try {
-      const response = await axios.post('https://compuscraper-production-4d6d.up.railway.app/api/buscar', { 
-        puesto: busqueda 
-      });
-      
-      const ofertasBase = response.data;
+    const response = await axios.post('https://compuscraper-production.up.railway.app/api/buscar', { puesto: busqueda });      
+    const ofertasBase = response.data;
 
       const ofertasConCoords = ofertasBase.map((oferta) => {
         const coordenadas = geocodeLocationManual(oferta.ubicacion);
@@ -142,8 +141,7 @@ function App() {
 
       setOfertas(ofertasConCoords);
     } catch (err) {
-      console.error('Error al buscar ofertas:', err);
-      setError(err.response?.data?.error || "Error al conectar con el servidor. Intenta nuevamente.");
+      setError("No se pudieron cargar las ofertas. Asegúrate de que el servidor esté corriendo.");
     } finally {
       setCargando(false);
     }
@@ -272,6 +270,7 @@ function App() {
             github="https://github.com/usuario"
             facebook="https://www.facebook.com/share/19s9iBZsFr/"
           />
+
         </div>
       </div>
     </div>
