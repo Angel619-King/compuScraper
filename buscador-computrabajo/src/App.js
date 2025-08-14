@@ -128,7 +128,7 @@ function App() {
     setMostrarMapaTop10(false);
 
     try {
-      const response = await axios.post('https://compuscraper-production-4d6d.up.railway.app/', { puesto: busqueda });
+      const response = await axios.post('http://compuscraper-production.up.railway.app', { puesto: busqueda });
       const ofertasBase = response.data;
 
       const ofertasConCoords = ofertasBase.map((oferta) => {
