@@ -81,8 +81,8 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
   transition: transform .15s ease, opacity .2s;
 }
 .btn-export:hover { transform: translateY(-1px); opacity: .95; }
-.btn-export.csv { background: linear-gradient(135deg, #00c853, #009845); }
-.btn-export.json { background: linear-gradient(135deg, #ff9800, #ef6c00); }
+.btn-export.excel { background: linear-gradient(135deg, #00c853, #009845); }
+.btn-export.csv { background: linear-gradient(135deg, #ff9800, #ef6c00); }
 .btn-export.pdf { background: linear-gradient(135deg, #ef5350, #d32f2f); }
 
 /* Grid de ofertas */
@@ -98,6 +98,10 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
   padding: 16px;
   box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
   transition: transform .2s ease, box-shadow .2s ease;
+  height: auto;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 .oferta-card:hover {
   transform: translateY(-3px);
@@ -105,7 +109,22 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
 }
 .oferta-titulo { color: #5e35b1; margin: 0 0 6px; font-size: 18px; }
 .salario { color: #2e7d32; font-weight: 700; margin-top: 6px; }
-.acciones { display: flex; gap: 8px; margin-top: 12px; }
+
+/* Botón Mostrar más/menos */
+.btn-mostrar-mas {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  padding: 5px 0;
+  font-size: 0.9em;
+  text-decoration: underline;
+  margin-top: auto;
+  align-self: flex-start;
+}
+.btn-mostrar-mas:hover {
+  color: #2980b9;
+}
 
 /* Mapa */
 .mapa-container {

@@ -31,6 +31,37 @@ const Filtros = ({ filtro, setFiltro }) => (
   </div>
 );
 
+const OfertaCard = ({ oferta }) => {
+  const [mostrarCompleto, setMostrarCompleto] = useState(false);
+  const maxPalabras = 30;
+  
+  const descripcionCorta = () => {
+    const palabras = oferta.descripcion.split(' ');
+    if (palabras.length <= maxPalabras || mostrarCompleto) {
+      return oferta.descripcion;
+    }
+    return palabras.slice(0, maxPalabras).join(' ') + '...';
+  };
+
+  return (
+    <div className="oferta-card">
+      <h3 className="oferta-titulo">{oferta.titulo}</h3>
+      <p><strong>Empresa:</strong> {oferta.empresa}</p>
+      <p><strong>Ubicación:</strong> {oferta.ubicacion}</p>
+      <p className="salario"><strong>Salario:</strong> {oferta.salario}</p>
+      <p><strong>Descripción:</strong> {descripcionCorta()}</p>
+      {oferta.descripcion.split(' ').length > maxPalabras && (
+        <button 
+          onClick={() => setMostrarCompleto(!mostrarCompleto)} 
+          className="btn-mostrar-mas"
+        >
+          {mostrarCompleto ? 'Mostrar menos' : 'Mostrar más'}
+        </button>
+      )}
+    </div>
+  );
+};
+
 const LeafletMap = ({ ofertas, centro, zoom, height }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -57,7 +88,6 @@ const LeafletMap = ({ ofertas, centro, zoom, height }) => {
           .bindPopup(
             `<h3>${oferta.titulo}</h3>` +
             `<p><strong>Salario:</strong> ${oferta.salario}</p>` +
-            `<p><strong>Ubicación:</strong> ${oferta.ubicacion}</p>` + 
             `<p><strong>Ubicación:</strong> ${oferta.ubicacion}</p>`
           );
       });
@@ -122,30 +152,47 @@ function App() {
       case 'mejores':
         resultados = resultados
           .filter(item => !isNaN(parseFloat(String(item.salario).replace(/[^0-9.]/g, ''))))
-          .sort((a, b) => parseFloat(String(b.salario).replace(/[^0-9.]/g, '')) -
-                          parseFloat(String(a.salario).replace(/[^0-9.]/g, '')))
+          .sort((a, b) => (
+            parseFloat(String(b.salario).replace(/[^0-9.]/g, '')) - 
+            parseFloat(String(a.salario).replace(/[^0-9.]/g, ''))
+          ))
           .slice(0, 10);
         break;
+
       case 'peores':
         resultados = resultados
           .filter(item => !isNaN(parseFloat(String(item.salario).replace(/[^0-9.]/g, ''))))
-          .sort((a, b) => parseFloat(String(a.salario).replace(/[^0-9.]/g, '')) -
-                          parseFloat(String(b.salario).replace(/[^0-9.]/g, '')))
+          .sort((a, b) => (
+            parseFloat(String(a.salario).replace(/[^0-9.]/g, '')) - 
+            parseFloat(String(b.salario).replace(/[^0-9.]/g, ''))
+          ))
           .slice(0, 10);
         break;
+
       default:
         break;
     }
+
     return resultados;
   };
 
   const handleSearchClick = () => fetchOfertas();
+
   const handleVerMapaTop10 = () => {
     setFiltro('mejores');
     setMostrarMapaTop10(true);
   };
 
+  const handleCerrarMapa = () => {
+    setMostrarMapaTop10(false);
+    setFiltro('todos'); // 🔹 Vuelve a mostrar todas las ofertas
+  };
+
   const resultadosRender = ofertasFiltradas();
+
+  const hayDatosValidos = ofertas.length > 0 && ofertas.some(
+    item => !isNaN(parseFloat(String(item.salario).replace(/[^0-9.]/g, '')))
+  );
 
   return (
     <div className="App">
@@ -165,9 +212,11 @@ function App() {
         <Filtros filtro={filtro} setFiltro={setFiltro} />
 
         <div className="toolbar">
-          <button onClick={handleVerMapaTop10} className="btn-primary">
-            Ver mapa de los 10 mejores
-          </button>
+          {hayDatosValidos && (
+            <button onClick={handleVerMapaTop10} className="btn-primary">
+              Ver mapa de los 10 mejores
+            </button>
+          )}
 
           {ofertas.length > 0 && (
             <BotonesExportar datos={ofertas} />
@@ -183,21 +232,14 @@ function App() {
         {!cargando && resultadosRender.length > 0 && (
           <div className="ofertas-grid">
             {resultadosRender.map((oferta, index) => (
-              <div key={index} className="oferta-card">
-                <h3 className="oferta-titulo">{oferta.titulo}</h3>
-                <p><strong>Empresa:</strong> {oferta.empresa}</p>
-                
-                <p><strong>Ubicación:</strong> {oferta.ubicacion}</p>
-                <p className="salario"><strong>Salario:</strong> {oferta.salario}</p>
-                <p><strong>Descripcion:</strong> {oferta.descripcion}</p>
-              </div>
+              <OfertaCard key={index} oferta={oferta} />
             ))}
           </div>
         )}
 
         {mostrarMapaTop10 && (
           <div className="mapa-container">
-            <button className="btn-danger" onClick={() => setMostrarMapaTop10(false)}>Cerrar Mapa</button>
+            <button className="btn-danger" onClick={handleCerrarMapa}>Cerrar Mapa</button>
             <h2 className="map-title">Ubicación de las 10 ofertas mejor pagadas</h2>
             <LeafletMap
               ofertas={resultadosRender}

@@ -2,7 +2,7 @@ import React from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const BotonesExportar = ({ datos = [] }) => {
   // Función para validar y formatear datos
@@ -56,8 +56,8 @@ const BotonesExportar = ({ datos = [] }) => {
       doc.setFontSize(18);
       doc.text('Reporte de Ofertas de Empleo', 105, 15, { align: 'center' });
 
-      // Configuración de la tabla
-      doc.autoTable({
+      // Tabla con autoTable
+      autoTable(doc, {
         startY: 25,
         head: [['Título', 'Empresa', 'Ubicación', 'Salario', 'Fecha']],
         body: datosFormateados.map(item => [
@@ -83,7 +83,7 @@ const BotonesExportar = ({ datos = [] }) => {
         margin: { top: 20 }
       });
 
-      // Pie de página
+      // Pie de página con número de página
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -117,7 +117,7 @@ const BotonesExportar = ({ datos = [] }) => {
         `"${item.empresa.replace(/"/g, '""')}"`,
         `"${item.ubicacion.replace(/"/g, '""')}"`,
         `"${item.salario.replace(/"/g, '""')}"`,
-        `"${item.publicado.replace(/"/g, '""')}"`
+        `"${item.publicado.replace(/"/g, '""')}"`,
       ]);
 
       const csvContent = [headers, ...csvRows].join('\n');
@@ -132,7 +132,7 @@ const BotonesExportar = ({ datos = [] }) => {
   return (
     <div className="botones-exportar">
       <button 
-        className="btn-export xlsx" 
+        className="btn-export excel" 
         onClick={exportarExcel}
         disabled={!datos || datos.length === 0}
       >
