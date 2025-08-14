@@ -253,9 +253,7 @@ function App() {
           </div>
         )}
 
-
-      </div>
-              {/* === SECCIÓN EQUIPO === */}
+        {/* === SECCIÓN EQUIPO === */}
         <h2 style={{ textAlign: "center", marginTop: "30px" }}>Nuestro Equipo</h2>
         <div className="dev-grid">
           <DevCard
@@ -274,8 +272,8 @@ function App() {
           />
 
         </div>
+      </div>
     </div>
-    
   );
 }
 
