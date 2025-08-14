@@ -32,6 +32,6 @@ app.post('/api/buscar', async (req, res) => {
     }
 });
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {  // <- Elimina '0.0.0.0'
     console.log(`API escuchando en http://localhost:${port}`);
 });
