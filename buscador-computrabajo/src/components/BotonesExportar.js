@@ -143,14 +143,14 @@ const BotonesExportar = ({ datos = [] }) => {
         onClick={exportarPDF}
         disabled={!datos || datos.length === 0}
       >
-        Exportar PDF
+        PDF
       </button>
       <button 
         className="btn-export csv" 
         onClick={exportarCSV}
         disabled={!datos || datos.length === 0}
       >
-        Exportar CSV
+        CSV
       </button>
     </div>
   );

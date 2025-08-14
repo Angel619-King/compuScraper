@@ -6,12 +6,12 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
 
 /* Header con degradado morado de izquierda a derecha */
 .header-gradient {
-  background: linear-gradient(to right, #b388ff, #7c4dff, #512da8);
+  background: linear-gradient(to right, #b388ff, #7c4dff, #a72222);
   padding: 32px 16px;
   color: #fff;
 }
 .header-inner { max-width: 1100px; margin: 0 auto; }
-.app-title { margin: 0 0 16px; font-size: 28px; font-weight: 800; }
+.app-title { margin: 0 0 16px; font-size: 28px; font-weight: 800; text-align: center; }
 
 /* Panel principal */
 .panel {
@@ -57,7 +57,7 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
   margin: 10px 0 18px;
 }
 .btn-primary {
-  background: linear-gradient(135deg, #6a1b9a, #512da8);
+  background: linear-gradient(135deg, #151a17, #009845);
   color: #fff;
   border: none;
   padding: 10px 16px;
@@ -80,10 +80,10 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
   color: #fff;
   transition: transform .15s ease, opacity .2s;
 }
-.btn-export:hover { transform: translateY(-1px); opacity: .95; }
-.btn-export.excel { background: linear-gradient(135deg, #00c853, #009845); }
-.btn-export.csv { background: linear-gradient(135deg, #ff9800, #ef6c00); }
-.btn-export.pdf { background: linear-gradient(135deg, #ef5350, #d32f2f); }
+.btn-export:hover { transform: translateY(-1px); opacity: .95;}
+.btn-export.excel { background: linear-gradient(135deg, #151a17, #009845); margin: 0 5px;   }
+.btn-export.csv { background: linear-gradient(135deg, #a8c03b, #ef6c00); margin: 0 5px;}
+.btn-export.pdf { background: linear-gradient(135deg, #5f8999, #d32f2f); }
 
 /* Grid de ofertas */
 .ofertas-grid {
@@ -107,8 +107,8 @@ body { margin: 0; background: #f0f4f8; font-family: Inter, system-ui, -apple-sys
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(17, 24, 39, 0.08);
 }
-.oferta-titulo { color: #5e35b1; margin: 0 0 6px; font-size: 18px; }
-.salario { color: #2e7d32; font-weight: 700; margin-top: 6px; }
+.oferta-titulo { color: #5e35b1; margin: 0 0 6px; font-size: 18px; text-align: center; }
+.salario { color: #b92828; font-weight: 700; margin-top: 6px; }
 
 /* Botón Mostrar más/menos */
 .btn-mostrar-mas {
