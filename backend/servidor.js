@@ -5,7 +5,7 @@ const cors = require('cors');
 const { scrapeJobs } = require('./index'); 
 
 const app = express();
-const port = 3001; 
+const port= '0.0.0.0'; 
 
 
 app.use(cors()); 
